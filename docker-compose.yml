@@ -1,0 +1,42 @@
+services:
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - wordpress_db
+    networks:
+      - wordpress
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: wordpress_db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ./plugins:/var/www/html/wp-content/plugins
+      - ./themes:/var/www/html/wp-content/themes
+      - ./uploads:/var/www/html/wp-content/uploads
+
+  wordpress_db:
+    image: mysql:8.0
+    networks:
+      - wordpress
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - wordpress_db:/var/lib/mysql
+
+volumes:
+  wordpress_db:
+
+networks:
+  wordpress:
+    name: "wordpress"
