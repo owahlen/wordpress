@@ -8,16 +8,15 @@ services:
       - wordpress
     restart: always
     ports:
-      - 8080:80
+      - 80:80
     environment:
       WORDPRESS_DB_HOST: wordpress_db
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: password
       WORDPRESS_DB_NAME: wordpress
     volumes:
-      - ./plugins:/var/www/html/wp-content/plugins
-      - ./themes:/var/www/html/wp-content/themes
-      - ./uploads:/var/www/html/wp-content/uploads
+      - wordpress:/var/www/html
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
 
   wordpress_db:
     image: mysql:8.0
@@ -35,6 +34,7 @@ services:
       - wordpress_db:/var/lib/mysql
 
 volumes:
+  wordpress:
   wordpress_db:
 
 networks:
